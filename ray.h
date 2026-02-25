@@ -14,10 +14,19 @@ private:
 	Vec3 dir;
 
 public:
+	const Vec3& origin() const {
+		return orig;
+	}
+
+	const Vec3& direction() const {
+		return dir;
+	}
+
+
 	Ray(Vec3 orig, Vec3 dir) : orig(orig), dir(dir) {}
 	Ray() : orig(0, 0, 0), dir(0, 0, 0) {}
 	
-	Vec3 pointAt(double t) {
+	Vec3 pointAt(double t) const {
 		return orig + t * dir;
 	}
 

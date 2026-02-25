@@ -35,13 +35,21 @@ class Vec3 {
 		double length() const {
 			return std::sqrt(length_squared());
 		}
+		
 
+		
+		Vec3 normalised() const {
+			double len = length();
+			return Vec3(x / len, y / len, z / len);
+		}
 		
 };
 
 Vec3 operator*(const double scalar, const Vec3& v) {
 	return v * scalar;
 }
+
+
 
 
 #endif
