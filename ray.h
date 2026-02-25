@@ -4,6 +4,9 @@
 #include "vec3.h"
 #include <iostream>
 
+// Represents the ray object, starting at a fixed 3-D point and extends in a direction.
+// P(t) = A + tb
+
 class Ray {
 
 private:
