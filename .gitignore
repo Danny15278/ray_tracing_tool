@@ -1,2 +1,7 @@
-image.ppm
-image_output
+
+# Build outputs
+main
+
+
+# Rendered images
+*.ppm
