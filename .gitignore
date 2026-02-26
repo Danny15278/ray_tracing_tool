@@ -3,5 +3,11 @@
 main
 a.out
 
+
 # Rendered images
 *.ppm
+
+
+# local files
+*.swp
+*.gch
