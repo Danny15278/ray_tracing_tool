@@ -4,32 +4,41 @@
 #include <iostream>
 
 
-bool sphere_point(const Vec3& centre, double radius, const Ray& ray) {
+double sphere_point(const Vec3& centre, double radius, const Ray& ray) {
 	auto oc{ centre - ray.origin() };
 	auto a{ ray.direction() * ray.direction() };
 	auto b{ -2 * ray.direction() * oc };
 	auto c{ (oc * oc) - (radius * radius) };
 	auto discriminant{ b * b - 4 * a * c };
-	return (discriminant >= 0);
+	
+	if (discriminant < 0) {
+		return -1.0;
+	} else {
+		return (-b - std::sqrt(discriminant)) / (2.0 * a);
+	}
 }
 
 
 Vec3 ray_colour(const Ray& r) {
+	
+	Vec3 centre(0, 0, -1);
+	auto sphere_t{ sphere_point(centre, 0.5, r) };
+	if (sphere_t >= 0.0) {
+		Vec3 P = r.origin() + (sphere_t * r.direction());
+		return 0.5 * ((P - centre).normalised() + 1);
+	}
+
 	Vec3 direction = r.direction();
 	
 	Vec3 normalised = direction.normalised();
-	double t = (normalised.y + 1) / 2;
-
-	if (sphere_point(Vec3(0, 0, -1), 0.5, r)) {
-			return Vec3(1, 0, 0);
-	}
+	double sky_t = (normalised.y + 1) / 2;
 
 	// For blue-white sky gradient
 	
 	Vec3 white(1.0, 1.0, 1.0);
 	Vec3 blue(0.5, 0.7, 1.0);
 
-	return (1 - t) * white + t * blue;
+	return (1 - sky_t) * white + sky_t * blue;
 
 }
 
