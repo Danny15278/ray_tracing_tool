@@ -27,7 +27,11 @@ public:
 		record.t = ((-b - std::sqrt(discriminant)) / (2.0 * a));
 		record.p = ray.pointAt(record.t);
 		record.normal = (record.p - centre).normalised();
-		
+		record.front_face = (dot_product(ray.direction(), record.normal) < 0);
+		if (!record.front_face) {
+			record.normal = -1 * record.normal;
+		}
+
 		return (record.t >= 0);		
 	}
 };
