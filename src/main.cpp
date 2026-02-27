@@ -6,15 +6,12 @@
 #include <iostream>
 
 
-Vec3 ray_colour(const Ray& r) {
+Vec3 ray_colour(const Ray& r, Hittable& object) {
 
-	Vec3 centre(0, 0, -1);
-	Sphere sphere(centre, 0.5);
-	
-	auto sphere_t{ sphere.intersect_point(r) };
-	if (sphere_t >= 0.0) {
-		Vec3 P{ r.pointAt(sphere_t) };
-		return 0.5 * ((P - centre).normalised() + 1);
+	HitRecord record;
+
+	if (object.hit(r, record)) {
+		return 0.5 * (record.normal + 1);
 	}
 
 	Vec3 direction = r.direction();
@@ -45,7 +42,12 @@ int main() {
 	Vec3 cam_position(0, 0, 0);
 	double focal_length{ 1.0 };
 
+	// creating a sphere object
 	
+	Sphere sphere(Vec3(0, 0, -1), 0.5);
+
+
+
 	// mapping pixels onto viewport
 	
 	std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
@@ -59,7 +61,7 @@ int main() {
 			
 			Vec3 viewport_point(x, -y, z);
 			Ray ray{ cam_position, (viewport_point - cam_position) };
-			Vec3 colour{ ray_colour(ray) };
+			Vec3 colour{ ray_colour(ray, sphere) };
 
 			auto r{ colour.x };
 			auto g{ colour.y };
