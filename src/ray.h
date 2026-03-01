@@ -4,8 +4,14 @@
 #include "vec3.h"
 #include <iostream>
 
-// Represents the ray object, starting at a fixed 3-D point and extends in a direction.
-// P(t) = A + tb
+
+/* 
+ * Represents a ray of light with a fixed three-dimensional point origin and extends ina  direction.
+ * Has a pointAt() function to find a position along the ray.
+ * P(t) = A + tb
+ */
+
+
 
 class Ray {
 

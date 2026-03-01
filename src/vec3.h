@@ -4,7 +4,11 @@
 #include <cmath>
 #include <iostream>
 
+
+
 // operates a class representing a 3-D vetor as doubles, as well as utility functions.
+
+
 
 class Vec3 {
 	

@@ -3,6 +3,15 @@
 
 #include "ray.h"
 
+
+
+/* 
+ * Structure HitRecord stores values regarding a hit (between ray and object).
+ * Hittable is an abstract base calss with virtual hit method, which is implemented by all objects that interact with rays.
+ */
+
+
+
 struct HitRecord {
 
 	double t;
@@ -16,7 +25,7 @@ struct HitRecord {
 class Hittable {
 
 public:
-	virtual bool hit(const Ray& r, HitRecord& record) = 0;
+	virtual bool hit(const Ray& r, HitRecord& record) const = 0;
 };
 
 

@@ -1,16 +1,16 @@
 #include "ray.h"
 #include "vec3.h"
 #include "sphere.h"
-
+#include "hittable_list.h"
 
 #include <iostream>
 
 
-Vec3 ray_colour(const Ray& r, Hittable& object) {
+Vec3 ray_colour(const Ray& r, const Hittable& objects) {
 
 	HitRecord record;
 
-	if (object.hit(r, record)) {
+	if (objects.hit(r, record)) {
 		return 0.5 * (record.normal + 1);
 	}
 
@@ -42,11 +42,12 @@ int main() {
 	Vec3 cam_position(0, 0, 0);
 	double focal_length{ 1.0 };
 
-	// creating a sphere object
+
+	// creating hittable_list to handle all objects in the image scene 
 	
-	Sphere sphere(Vec3(0, 0, -1), 0.5);
-
-
+	Hittable_List scene_objects{};
+	scene_objects.add_object(std::make_shared<Sphere>(Vec3(0, 0, -1), 0.5));
+	
 
 	// mapping pixels onto viewport
 	
@@ -61,7 +62,7 @@ int main() {
 			
 			Vec3 viewport_point(x, -y, z);
 			Ray ray{ cam_position, (viewport_point - cam_position) };
-			Vec3 colour{ ray_colour(ray, sphere) };
+			Vec3 colour{ ray_colour(ray, scene_objects) };
 
 			auto r{ colour.x };
 			auto g{ colour.y };
