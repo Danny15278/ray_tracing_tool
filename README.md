@@ -7,4 +7,5 @@ After compiling main.cpp, ray-traced image files are produced in the .ppm file f
 Features so far:
 - Sky gradient
 - Sphere object
+- Scenes with multiple objects
 - Surface normalisation
