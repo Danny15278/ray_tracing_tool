@@ -1,5 +1,3 @@
-This repository's code is still in progress.
-
 
 # Image Ray-Tracing Tool
 
