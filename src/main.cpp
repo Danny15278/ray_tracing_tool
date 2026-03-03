@@ -21,5 +21,7 @@ int main() {
 	
 
 	Camera camera;
+	camera.image_width = 800;
+	camera.image_height = 400;
 	camera.render(scene);
 }

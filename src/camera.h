@@ -33,10 +33,8 @@ private:
 public:
 
 	// Image scene parameters
-
-	int image_width{ 400 };
-        int image_height{ 200 };
-
+	int image_width{};
+	int image_height{};
         Vec3 cam_position{0, 0, 0};
         double focal_length{ 1.0 };
 
