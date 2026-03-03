@@ -28,8 +28,14 @@ public:
 		auto discriminant{ b * b - 4 * a * c };
 		
 		if (discriminant < 0) { return false; }
-
-		record.t = ((-b - std::sqrt(discriminant)) / (2.0 * a));
+		
+		double t{ ((-b - std::sqrt(discriminant)) / (2.0 * a)) };
+		if (t < 0) {
+			t = ((-b + std::sqrt(discriminant)) / (2.0 * a));
+			if (t < 0)
+				return false;
+		}
+		record.t = t;
 		record.p = ray.pointAt(record.t);
 		record.normal = (record.p - centre).normalised();
 		record.front_face = (dot_product(ray.direction(), record.normal) < 0);
@@ -37,7 +43,7 @@ public:
 			record.normal = -1 * record.normal;
 		}
 
-		return (record.t >= 0);		
+		return true; 
 	}
 };
 
