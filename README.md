@@ -9,3 +9,4 @@ Features so far:
 - Sphere object
 - Scenes with multiple objects
 - Surface normalisation
+- Pixel antialiasing
