@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #include "hittable.h"
+#include "utils.h"
 
 class Camera {
 
@@ -42,7 +43,7 @@ public:
 	int image_width{};
 	int image_height{};
         Vec3 cam_position{0, 0, 0};
-	int pixel_samples{};
+	int no_samples{};
         double focal_length{ 1.0 };
 
 
@@ -51,41 +52,46 @@ public:
 		double asp_ratio{ double(image_width) / image_height };
 		double viewport_h{ 2.0 };
 		double viewport_w{ viewport_h * asp_ratio };
+		double pixel_w{ viewport_w / image_width };
+		double pixel_h{ viewport_h / image_height };
 
 		std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
 		for (int j{ 0 }; j < image_height; ++j) {
 			for (int i{ 0 }; i < image_width; ++i) {
 
-                        double x{ ((double (i) / (image_width - 1)) * viewport_w) - (viewport_w / 2) };
-                        double y{ ((double (j) / (image_height - 1)) * viewport_h) - (viewport_h / 2) };
-                        double z{ (double) (-focal_length) };
-			
 
-			
-                        Vec3 viewport_point(x, -y, z);
+				// Calculate viewport pixels
+				
+				double x{ ((double (i) / (image_width - 1)) * viewport_w) - (viewport_w / 2) };
+				double y{ ((double (j) / (image_height - 1)) * viewport_h) - (viewport_h / 2) };
+				double z{ (double) (-focal_length) };
+				
+				Vec3 viewport_point(x, -y, z);
 
-			Vec3 sum_pixel(0, 0, 0);
-			for (int i{ 0 }; i < pixel_samples; ++i) {
+				Vec3 sum_pixel(0, 0, 0);
+				for (int s{ 0 }; s < no_samples; ++s) {
+					Vec3 offset{ sample_square().x * pixel_w, sample_square().y * pixel_h, 0 };
+					
+					Vec3 sample_point{ viewport_point + offset };
+					Ray ray{ cam_position, (sample_point - cam_position) };
+					sum_pixel += ray_colour(ray, scene);
+				}
 
-			
+				sum_pixel = sum_pixel / no_samples;
 
-                        Ray ray{ cam_position, (viewport_point - cam_position) };
-                        Vec3 colour{ ray_colour(ray, scene) };
+				auto r{ sum_pixel.x };
+				auto g{ sum_pixel.y };
+				auto b{ sum_pixel.z };
 
-                        auto r{ colour.x };
-                        auto g{ colour.y };
-                        auto b{ colour.z };
+				int rbyte{ int(255.99 * r) };
+				int gbyte{ int(255.99 * g) };
+				int bbyte{ int(255.99 * b) };
 
-                        int rbyte{ int(255.99 * r) };
-                        int gbyte{ int(255.99 * g) };
-                        int bbyte{ int(255.99 * b) };
-
-                        std::cout << rbyte << ' ' << gbyte << ' ' << bbyte << '\n';
+				std::cout << rbyte << ' ' << gbyte << ' ' << bbyte << '\n';
 			}
 		}
 	}
-
 };
 
 
