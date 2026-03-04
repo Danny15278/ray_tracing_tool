@@ -11,6 +11,8 @@
  */
 
 
+class Material;
+
 
 struct HitRecord {
 
