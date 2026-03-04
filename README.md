@@ -16,7 +16,7 @@ Requirements:
 - C++ compiler (gcc, clang, etc.)
 - PPM Image format viewer (Gimp, ImageMagick, etc.)
 
-Running and viewing image (E.g. Using GCC compiler)
-`g++ main.cpp -o main`
-`./main > image.ppm`
+Running and viewing image (E.g. Using GCC compiler)<br>
+`g++ main.cpp -o main`<br>
+`./main > image.ppm`<br>
 `display image.ppm`
