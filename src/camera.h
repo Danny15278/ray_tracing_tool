@@ -29,6 +29,12 @@ private:
 		return (1 - sky_t) * white + sky_t * blue;	
 	}
 	
+	// Random sampel square for anti-aliasing
+
+	Vec3 sample_square() const {
+		return Vec3(random_double() - 0.5, random_double() - 0.5, 0);
+	}
+
 
 public:
 
@@ -36,14 +42,13 @@ public:
 	int image_width{};
 	int image_height{};
         Vec3 cam_position{0, 0, 0};
+	int pixel_samples{};
         double focal_length{ 1.0 };
-
 
 
 	void render(const Hittable& scene) {
 		
 		double asp_ratio{ double(image_width) / image_height };
-
 		double viewport_h{ 2.0 };
 		double viewport_w{ viewport_h * asp_ratio };
 
@@ -55,8 +60,16 @@ public:
                         double x{ ((double (i) / (image_width - 1)) * viewport_w) - (viewport_w / 2) };
                         double y{ ((double (j) / (image_height - 1)) * viewport_h) - (viewport_h / 2) };
                         double z{ (double) (-focal_length) };
+			
 
+			
                         Vec3 viewport_point(x, -y, z);
+
+			Vec3 sum_pixel(0, 0, 0);
+			for (int i{ 0 }; i < pixel_samples; ++i) {
+
+			
+
                         Ray ray{ cam_position, (viewport_point - cam_position) };
                         Vec3 colour{ ray_colour(ray, scene) };
 

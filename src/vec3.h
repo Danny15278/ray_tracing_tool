@@ -32,6 +32,19 @@ class Vec3 {
 			return Vec3(x * scalar, y * scalar, z * scalar); 
 		}
 
+		Vec3& operator+=(const Vec3& other) {
+			x += other.x;
+			y += other.y;
+			z += other.z;
+			return *this;
+		}
+
+		Vec3 operator/(const double scalar) const {
+			return Vec3(x * (1/scalar), y * (1/scalar), z * (1/scalar));
+		}
+
+		
+
 		double length_squared() const {
 			return x * x + y * y + z * z;
 		}
@@ -47,7 +60,7 @@ class Vec3 {
 		Vec3 normalised() const {
 			double len = length();
 			return Vec3(x / len, y / len, z / len);
-		}
+		}	
 		
 };
 
