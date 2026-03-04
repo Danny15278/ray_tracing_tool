@@ -30,7 +30,7 @@ private:
 		return (1 - sky_t) * white + sky_t * blue;	
 	}
 	
-	// Random sampel square for anti-aliasing
+	// Random sample square for anti-aliasing
 
 	Vec3 sample_square() const {
 		return Vec3(random_double() - 0.5, random_double() - 0.5, 0);
@@ -71,8 +71,10 @@ public:
 
 				Vec3 sum_pixel(0, 0, 0);
 				for (int s{ 0 }; s < no_samples; ++s) {
-					Vec3 offset{ sample_square().x * pixel_w, sample_square().y * pixel_h, 0 };
-					
+
+					// Antialiasing calculation
+
+					Vec3 offset{ sample_square().x * pixel_w, sample_square().y * pixel_h, 0 };		
 					Vec3 sample_point{ viewport_point + offset };
 					Ray ray{ cam_position, (sample_point - cam_position) };
 					sum_pixel += ray_colour(ray, scene);
