@@ -61,6 +61,13 @@ public:
 		return Vec3(x / len, y / len, z / len);
 	}
 
+	Vec3 component_multiply(const Vec3& other) {
+		return Vec3(x * other.x, y * other.y, z * other.z);
+	}
+
+	bool near_zero() const {
+		return (std::fabs(x) < 1e-8) && (std::fabs(y) < 1e-8) && (std::fabs(z) < 1e-8);
+	}
 };
 
 Vec3 operator*(const double scalar, const Vec3& v) {
@@ -71,8 +78,6 @@ double operator*(const Vec3& v1, const Vec3& v2) {
 	return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z); 
 }
 
-inline double dot_product(const Vec3& v1, const Vec3 v2) {
-	return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z);
-}
+
 
 #endif

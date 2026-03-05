@@ -5,6 +5,8 @@
 #include "vec3.h"
 #include "hittable.h"
 
+#include <memory>
+
 
 // Concrete sphere shape. Implements hit method via ray-intersection math.
 
@@ -15,10 +17,11 @@ class Sphere : public Hittable {
 private:
 	Vec3 centre;
 	double radius;
+	std::shared_ptr<Material> material;
 
 
 public:
-	Sphere(const Vec3& centre, double radius) : centre(centre), radius(radius) {}
+	Sphere(const Vec3& centre, double radius, std::shared_ptr<Material> material) : centre(centre), radius(radius), material(material) {}
 
 	bool hit(const Ray& ray, HitRecord& record) const override {
 		auto oc{ centre - ray.origin() };
@@ -37,13 +40,15 @@ public:
 		}
 		record.t = t;
 		record.p = ray.pointAt(record.t);
+		record.material = material;
 		record.normal = (record.p - centre).normalised();
-		record.front_face = (dot_product(ray.direction(), record.normal) < 0);
+		record.front_face = (ray.direction() * record.normal) < 0;
 		if (!record.front_face) {
 			record.normal = -1 * record.normal;
 		}
 
-		return true; 
+		return true;
+
 	}
 };
 

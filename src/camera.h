@@ -3,18 +3,33 @@
 
 #include "hittable.h"
 #include "utils.h"
+#include "material.h"
 
 class Camera {
 
 private:
 	
 
-	Vec3 ray_colour(const Ray& r, const Hittable& objects) {
+	Vec3 ray_colour(const Ray& r, const Hittable& objects, int depth) {
+
+		// check max depth parameter
+
+		if (depth <= 0)
+			return Vec3(0, 0, 0);
+
 
 		HitRecord record;
 
+		// recursive call for scattering of ray based on material
+
 		if (objects.hit(r, record)) {
-			return 0.5 * (record.normal + 1);
+			Ray scattered{};
+			Vec3 col_attenuation{};
+
+			if (record.material->scatter(r, record, col_attenuation, scattered))
+				return col_attenuation.component_multiply(ray_colour(scattered, objects, depth - 1));
+
+			return Vec3(0, 0, 0); 
 		}
 
 		Vec3 direction = r.direction();
@@ -42,6 +57,7 @@ public:
 	// Image scene parameters
 	int image_width{};
 	int image_height{};
+	int depth{};
         Vec3 cam_position{0, 0, 0};
 	int no_samples{};
         double focal_length{ 1.0 };
@@ -77,14 +93,16 @@ public:
 					Vec3 offset{ sample_square().x * pixel_w, sample_square().y * pixel_h, 0 };		
 					Vec3 sample_point{ viewport_point + offset };
 					Ray ray{ cam_position, (sample_point - cam_position) };
-					sum_pixel += ray_colour(ray, scene);
+					sum_pixel += ray_colour(ray, scene, depth);
 				}
 
 				sum_pixel = sum_pixel / no_samples;
+				
+				// Gamma correction
 
-				auto r{ sum_pixel.x };
-				auto g{ sum_pixel.y };
-				auto b{ sum_pixel.z };
+				auto r{ std::sqrt(sum_pixel.x) };
+				auto g{ std::sqrt(sum_pixel.y) };
+				auto b{ std::sqrt(sum_pixel.z) };
 
 				int rbyte{ int(255.99 * r) };
 				int gbyte{ int(255.99 * g) };

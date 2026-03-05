@@ -3,6 +3,8 @@
 
 #include "ray.h"
 
+#include <memory>
+
 
 
 /* 
@@ -20,6 +22,7 @@ struct HitRecord {
 	Vec3 p;
 	Vec3 normal;
 	bool front_face;
+	std::shared_ptr<Material> material;
 
 };
 
