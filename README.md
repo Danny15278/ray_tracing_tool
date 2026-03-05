@@ -11,6 +11,7 @@ Features so far:
 - Scenes with multiple objects
 - Surface normalisation
 - Pixel antialiasing
+- Diffuse/Lambertian surfaces for objects
 
 Requirements:
 - C++ compiler (gcc, clang, etc.)
