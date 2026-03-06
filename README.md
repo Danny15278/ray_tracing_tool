@@ -11,13 +11,14 @@ Features so far:
 - Scenes with multiple objects
 - Surface normalisation
 - Pixel antialiasing
-- Diffuse/Lambertian surfaces for objects
+- Diffuse/Lambertian materials with recursive ray bouncing
+- Gamma correction
 
 Requirements:
 - C++ compiler (gcc, clang, etc.)
 - PPM Image format viewer (Gimp, ImageMagick, etc.)
 
-Running and viewing image (E.g. Using GCC compiler)<br>
+Running and viewing image (E.g. Using GCC compiler and ImageMagick in bash)<br>
 `g++ main.cpp -o main`<br>
 `./main > image.ppm`<br>
 `display image.ppm`
