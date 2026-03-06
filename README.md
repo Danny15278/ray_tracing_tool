@@ -1,7 +1,7 @@
 
 # Image Ray-Tracing Tool
 
-A ray-tracing image tool developed in modern C++. 
+A software ray-tracing image tool developed in modern, raw C++ without the use of any external graphics APIs or libraries, being purely CPU based.
 Based on concepts introduced in Peter Shirley, Trevor David Black, and Steve Hollasch's book "Ray Tracing in One Weekend". 
 After compiling main.cpp, ray-traced image files are produced in the .ppm file format. 
 
