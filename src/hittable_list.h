@@ -38,7 +38,7 @@ public:
 		double closest{ std::numeric_limits<double>::infinity() };
 
 		for (const auto& object : objects) {
-			if (object->hit(ray, temp_record)) {
+			if (object->hit(ray, temp_record) && temp_record.t > 0.001) {
 				hit = true;
 				if (temp_record.t < closest) {
 					closest = temp_record.t;
