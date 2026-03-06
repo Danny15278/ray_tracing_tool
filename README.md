@@ -12,6 +12,7 @@ Features so far:
 - Surface normalisation
 - Pixel antialiasing
 - Diffuse/Lambertian materials with recursive ray bouncing
+- Metal reflective materials
 - Gamma correction
 
 Requirements:
