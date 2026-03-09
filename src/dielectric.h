@@ -47,7 +47,7 @@ public:
 
 		// schlik approximation for reflectivity of glass material
 		
-		if (can_refract || reflectance(cos_theta, eta_ratio) > random_double())
+		if (!can_refract || reflectance(cos_theta, eta_ratio) > random_double())
 			direction = refract(ray_in.direction(), record.normal, eta_ratio);
 		else
 			direction = reflect(ray_in.direction(), record.normal);
