@@ -25,6 +25,12 @@ private:
 	
 	double refraction_index{};
 
+	static double reflectance(double cos, double refraction_index) {
+		auto r0 = (1 - refraction_index) / (1 + refraction_index);
+		r0 = r0 * r0;
+		return r0 + (1- r0) * std::pow((1 - cos), 5);
+	}
+
 
 public:
 	Dielectric(double refraction_index) : refraction_index(refraction_index) {}
@@ -38,7 +44,10 @@ public:
 		bool can_refract{ eta_ratio * sin_theta <= 1.0 };
 		Vec3 direction{};
 
-		if (can_refract)
+
+		// schlik approximation for reflectivity of glass material
+		
+		if (can_refract || reflectance(cos_theta, eta_ratio) > random_double())
 			direction = refract(ray_in.direction(), record.normal, eta_ratio);
 		else
 			direction = reflect(ray_in.direction(), record.normal);
