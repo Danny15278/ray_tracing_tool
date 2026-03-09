@@ -35,7 +35,7 @@ public:
 		
 		double cos_theta{ std::fmin((-1 * ray_in.direction() * record.normal), 1.0) };
 		double sin_theta{ std::sqrt(1.0 - cos_theta * cos_theta) };
-		bool can_refract{ eta_ratio * sin_theta > 1.0 };
+		bool can_refract{ eta_ratio * sin_theta <= 1.0 };
 		Vec3 direction{};
 
 		if (can_refract)
