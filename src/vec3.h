@@ -82,4 +82,12 @@ inline Vec3 reflect(const Vec3& v, const Vec3& n) {
 	return v - 2 * (v * n) * n;
 }
 
+
+inline Vec3 refract(const Vec3& v_in, const Vec3& normal, double refractive_index) {
+	auto cos_theta{ std::fmin((( -1 * v_in) * normal), 1.0) };
+	Vec3 ray_out_perpendicular{ refractive_index * (v_in + cos_theta * normal) };
+	Vec3 ray_out_parallel{ -1 * std::sqrt(1.0 - ray_out_perpendicular.length_squared()) * normal };
+	return ray_out_perpendicular + ray_out_parallel;
+}
+
 #endif

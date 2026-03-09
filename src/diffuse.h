@@ -19,7 +19,7 @@ private:
 
 
 public:
-	Diffuse(const Vec3& albedo) : albedo(albedo) {}
+Diffuse(const Vec3& albedo) : albedo(albedo) {}
 
 	bool scatter (const Ray& ray_in, const HitRecord& record, Vec3& col_attenuation, Ray& scattered) const override {
 		Vec3 random_scatter{ record.normal + random_unit_vector() };

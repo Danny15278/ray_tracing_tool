@@ -41,11 +41,7 @@ public:
 		record.t = t;
 		record.p = ray.pointAt(record.t);
 		record.material = material;
-		record.normal = (record.p - centre).normalised();
-		record.front_face = (ray.direction() * record.normal) < 0;
-		if (!record.front_face) {
-			record.normal = -1 * record.normal;
-		}
+		record.set_front_face_normal(ray, (record.p - centre).normalised());
 
 		return true;
 
