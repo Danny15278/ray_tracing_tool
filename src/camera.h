@@ -5,6 +5,8 @@
 #include "utils.h"
 #include "material.h"
 
+#include <cmath>
+
 class Camera {
 
 private:
@@ -58,15 +60,21 @@ public:
 	int image_width{};
 	int image_height{};
 	int depth{};
+	double vfov{};
         Vec3 cam_position{0, 0, 0};
 	int no_samples{};
         double focal_length{ 1.0 };
+	double pi{ M_PI };
+
 
 
 	void render(const Hittable& scene) {
 		
 		double asp_ratio{ double(image_width) / image_height };
-		double viewport_h{ 2.0 };
+
+		double theta{ vfov * (pi / 180.0) };
+		double h{ std::tan(theta / 2) };
+		double viewport_h{ 2 * h };
 		double viewport_w{ viewport_h * asp_ratio };
 		double pixel_w{ viewport_w / image_width };
 		double pixel_h{ viewport_h / image_height };

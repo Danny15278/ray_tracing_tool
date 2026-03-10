@@ -34,6 +34,7 @@ int main() {
 	camera.image_height = 400;
 	camera.depth = 50;
 	camera.no_samples = 100;
+	camera.vfov = 45.0;
 
 
 	camera.render(scene);
