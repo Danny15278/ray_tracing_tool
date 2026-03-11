@@ -50,6 +50,11 @@ private:
 		return Vec3(random_double() - 0.5, random_double() - 0.5, 0);
 	}
 
+	Vec3 random_disk_point() const {
+		auto p{ random_disk_vector() };
+		return lookfrom + (p.x * defocus_disk_u) + (p.y * defocus_disk_v);
+	}
+
 
 public:
 
@@ -65,6 +70,11 @@ public:
 	Vec3 lookat{ 0, 0, -1 }; 	// camera target
 	Vec3 vup{ 0, 1, 0 }; 		// which direction is upwards in the scene
 	Vec3 u, v, w; 			// describe camera's orientation via local coordinate axis
+	
+	double defocus_angle{ 0 }; 	// variation angle of rays via each pixel
+	double focus_distance{ 10 }; 	// distance between lookfrom to plane of focus
+	Vec3 defocus_disk_u{}; 		// horizontal radius of defocus disk
+	Vec3 defocus_disk_v{}; 		// vertical radius of defocus disk
 
 	// Render scene
 
@@ -73,11 +83,10 @@ public:
 		double asp_ratio{ double(image_width) / image_height };
 		double theta{ vfov * (pi / 180.0) };
 		double h{ std::tan(theta / 2) };
-		double viewport_h{ 2 * h }; 					// height of viewport
+		double viewport_h{ 2 * h * focus_distance }; 			// height of viewport
 		double viewport_w{ viewport_h * asp_ratio }; 			// width of viewport
 		double pixel_w{ viewport_w / image_width }; 			// size of pixel in viewport space
 		double pixel_h{ viewport_h / image_height };
-		double focal_length{ (lookfrom - lookat).length() };
 
 		w = (lookfrom - lookat).normalised(); 				
 		u = cross_product(vup, w).normalised();
@@ -87,7 +96,11 @@ public:
 		Vec3 viewport_u{ viewport_w * u }; 				// horizontal vector for viewport
 		Vec3 viewport_v{ viewport_h * -v }; 				// vertical vector for viewport
 
-		auto viewport_upper_left = lookfrom - (focal_length * w) - viewport_u / 2 - viewport_v / 2;
+		auto viewport_upper_left = lookfrom - (focus_distance * w) - viewport_u / 2 - viewport_v / 2;
+		
+		auto defocus_radius{ focus_distance * std::tan(degrees_to_radians(defocus_angle / 2)) };
+		defocus_disk_u = u * defocus_radius;
+		defocus_disk_v = v * defocus_radius;
 
 
 		// Render ppm image
@@ -107,7 +120,8 @@ public:
 
 					Vec3 offset{ sample_square().x * (viewport_u / image_width) + sample_square().y * (viewport_v / image_height) };		
 					Vec3 sample_point{ pixel_centre + offset };
-					Ray ray{ lookfrom, (sample_point - lookfrom) };
+					auto ray_origin = (defocus_angle <= 0) ? lookfrom : random_disk_point();
+					Ray ray{ ray_origin, (sample_point - ray_origin) };
 					sum_pixel += ray_colour(ray, scene, depth);
 				}
 

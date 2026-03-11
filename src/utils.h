@@ -40,5 +40,17 @@ inline Vec3 random_unit_vector() {
         }
 }
 
+inline Vec3 random_disk_vector() {
+	while (true) {
+		auto p{ Vec3(random_double(-1, 1), random_double(-1, 1), 0) };
+		if (p.length_squared() < 1)
+			return p;
+	}
 
+}
+
+
+inline double degrees_to_radians(double degrees) {
+	return degrees * pi / 180.0;
+}
 #endif

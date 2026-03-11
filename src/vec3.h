@@ -105,4 +105,5 @@ inline Vec3 cross_product(const Vec3& v1, const Vec3& v2) {
 	return Vec3(x, y, z);
 }
 
+
 #endif

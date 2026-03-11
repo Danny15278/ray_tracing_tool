@@ -39,10 +39,13 @@ int main() {
 	camera.no_samples = 100;
 	
 	
-	camera.vfov = 90.0;
+	camera.vfov = 20.0;
 	camera.lookfrom = Vec3(-2, 2, 1);
 	camera.lookat = Vec3(0, 0, -1);
 	camera.vup = Vec3(0, 1, 0);
+
+	camera.defocus_angle = 10.0;
+	camera.focus_distance = 3.4;
 
 
 	camera.render(scene);
