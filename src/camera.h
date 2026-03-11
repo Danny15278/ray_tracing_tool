@@ -54,45 +54,52 @@ private:
 public:
 
 	// Image scene parameters
+	
 	int image_width{};
 	int image_height{};
 	int depth{};
 	int no_samples{};
 
-	double vfov{};
+	double vfov{}; 			// field of view
 	Vec3 lookfrom{ 0, 0, 0 }; 	// camera origin
 	Vec3 lookat{ 0, 0, -1 }; 	// camera target
 	Vec3 vup{ 0, 1, 0 }; 		// which direction is upwards in the scene
-	Vec3 u, v, w;
+	Vec3 u, v, w; 			// describe camera's orientation via local coordinate axis
+
+	// Render scene
 
 	void render(const Hittable& scene) {
 		
 		double asp_ratio{ double(image_width) / image_height };
-
 		double theta{ vfov * (pi / 180.0) };
 		double h{ std::tan(theta / 2) };
-		double viewport_h{ 2 * h };
-		double viewport_w{ viewport_h * asp_ratio };
-		double pixel_w{ viewport_w / image_width };
+		double viewport_h{ 2 * h }; 					// height of viewport
+		double viewport_w{ viewport_h * asp_ratio }; 			// width of viewport
+		double pixel_w{ viewport_w / image_width }; 			// size of pixel in viewport space
 		double pixel_h{ viewport_h / image_height };
 		double focal_length{ (lookfrom - lookat).length() };
 
-		w = (lookfrom - lookat).normalised();
+		w = (lookfrom - lookat).normalised(); 				
 		u = cross_product(vup, w).normalised();
 		v = cross_product(w, u);
 		
 
-		Vec3 viewport_u{ viewport_w * u };
-		Vec3 viewport_v{ viewport_h * -v };
+		Vec3 viewport_u{ viewport_w * u }; 				// horizontal vector for viewport
+		Vec3 viewport_v{ viewport_h * -v }; 				// vertical vector for viewport
+
 		auto viewport_upper_left = lookfrom - (focal_length * w) - viewport_u / 2 - viewport_v / 2;
+
+
+		// Render ppm image
+
 		std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+	
+		// iterate through each pixel
 
 		for (int j{ 0 }; j < image_height; ++j) {
 			for (int i{ 0 }; i < image_width; ++i) {
 
-				
 				auto pixel_centre = viewport_upper_left + (double (i) / image_width) * viewport_u + (double (j) / image_height) * viewport_v;
-
 				Vec3 sum_pixel(0, 0, 0);
 				for (int s{ 0 }; s < no_samples; ++s) {
 
