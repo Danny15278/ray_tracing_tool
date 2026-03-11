@@ -29,12 +29,20 @@ int main() {
 	scene.add_object(std::make_shared<Sphere>(Vec3(-1.0, 0.0, -1.0), 0.5, material_left));
 	scene.add_object(std::make_shared<Sphere>(Vec3(1.0, 0.0, -1.0), 0.5, material_right));	
 
+
+	// Configuration of camera position and field of view
+	
 	Camera camera;
 	camera.image_width = 800;
 	camera.image_height = 400;
 	camera.depth = 50;
 	camera.no_samples = 100;
-	camera.vfov = 45.0;
+	
+	
+	camera.vfov = 90.0;
+	camera.lookfrom = Vec3(-2, 2, 1);
+	camera.lookat = Vec3(0, 0, -1);
+	camera.vup = Vec3(0, 1, 0);
 
 
 	camera.render(scene);

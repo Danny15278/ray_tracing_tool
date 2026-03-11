@@ -28,6 +28,10 @@ public:
 		return Vec3(x - other.x, y - other.y, z - other.z);
 	}
 
+	Vec3 operator-() const {
+		return Vec3(-x, -y, -z);
+	}
+
 	Vec3 operator*(const double scalar) const {
 		return Vec3(x * scalar, y * scalar, z * scalar); 
 	}
@@ -70,6 +74,9 @@ public:
 	}
 };
 
+
+
+
 Vec3 operator*(const double scalar, const Vec3& v) {
 	return v * scalar;
 }
@@ -88,6 +95,14 @@ inline Vec3 refract(const Vec3& v_in, const Vec3& normal, double refractive_inde
 	Vec3 ray_out_perpendicular{ refractive_index * (v_in + cos_theta * normal) };
 	Vec3 ray_out_parallel{ -1 * std::sqrt(std::fmax(0.0, 1.0 - ray_out_perpendicular.length_squared())) * normal };
 	return ray_out_perpendicular + ray_out_parallel;
+}
+
+
+inline Vec3 cross_product(const Vec3& v1, const Vec3& v2) {
+	auto x{ v1.y * v2.z - v1.z * v2.y };
+	auto y{ v1.z * v2.x - v1.x * v2.z };
+	auto z{ v1.x * v2.y - v1.y * v2.x };
+	return Vec3(x, y, z);
 }
 
 #endif

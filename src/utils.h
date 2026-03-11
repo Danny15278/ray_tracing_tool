@@ -4,6 +4,10 @@
 #include "vec3.h"
 
 #include <random>
+#include <cmath>
+
+
+const double pi{ M_PI };
 
 inline double random_double() {
 	static std::uniform_real_distribution<double> distribution(0.0, 1.0);

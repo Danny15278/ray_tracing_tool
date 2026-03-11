@@ -5,12 +5,9 @@
 #include "utils.h"
 #include "material.h"
 
-#include <cmath>
-
 class Camera {
 
 private:
-	
 
 	Vec3 ray_colour(const Ray& r, const Hittable& objects, int depth) {
 
@@ -60,13 +57,13 @@ public:
 	int image_width{};
 	int image_height{};
 	int depth{};
-	double vfov{};
-        Vec3 cam_position{0, 0, 0};
 	int no_samples{};
-        double focal_length{ 1.0 };
-	double pi{ M_PI };
 
-
+	double vfov{};
+	Vec3 lookfrom{ 0, 0, 0 }; 	// camera origin
+	Vec3 lookat{ 0, 0, -1 }; 	// camera target
+	Vec3 vup{ 0, 1, 0 }; 		// which direction is upwards in the scene
+	Vec3 u, v, w;
 
 	void render(const Hittable& scene) {
 		
@@ -78,29 +75,32 @@ public:
 		double viewport_w{ viewport_h * asp_ratio };
 		double pixel_w{ viewport_w / image_width };
 		double pixel_h{ viewport_h / image_height };
+		double focal_length{ (lookfrom - lookat).length() };
 
+		w = (lookfrom - lookat).normalised();
+		u = cross_product(vup, w).normalised();
+		v = cross_product(w, u);
+		
+
+		Vec3 viewport_u{ viewport_w * u };
+		Vec3 viewport_v{ viewport_h * -v };
+		auto viewport_upper_left = lookfrom - (focal_length * w) - viewport_u / 2 - viewport_v / 2;
 		std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
 		for (int j{ 0 }; j < image_height; ++j) {
 			for (int i{ 0 }; i < image_width; ++i) {
 
-
-				// Calculate viewport pixels
 				
-				double x{ ((double (i) / (image_width - 1)) * viewport_w) - (viewport_w / 2) };
-				double y{ ((double (j) / (image_height - 1)) * viewport_h) - (viewport_h / 2) };
-				double z{ (double) (-focal_length) };
-				
-				Vec3 viewport_point(x, -y, z);
+				auto pixel_centre = viewport_upper_left + (double (i) / image_width) * viewport_u + (double (j) / image_height) * viewport_v;
 
 				Vec3 sum_pixel(0, 0, 0);
 				for (int s{ 0 }; s < no_samples; ++s) {
 
 					// Antialiasing calculation
 
-					Vec3 offset{ sample_square().x * pixel_w, sample_square().y * pixel_h, 0 };		
-					Vec3 sample_point{ viewport_point + offset };
-					Ray ray{ cam_position, (sample_point - cam_position) };
+					Vec3 offset{ sample_square().x * (viewport_u / image_width) + sample_square().y * (viewport_v / image_height) };		
+					Vec3 sample_point{ pixel_centre + offset };
+					Ray ray{ lookfrom, (sample_point - lookfrom) };
 					sum_pixel += ray_colour(ray, scene, depth);
 				}
 
