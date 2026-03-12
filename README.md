@@ -1,12 +1,14 @@
 
 # Image Ray-Tracing Tool
 
-A ray-tracing image tool developed in modern, raw C++ without the use of any external graphics APIs or libraries.<br>
+A CPU-based ray-tracing image tool developed in modern C++, without the use of any external graphics APIs or libraries. Images are created with multithreading for parallelism.<br>
+
 Based on concepts introduced in Peter Shirley, Trevor David Black, and Steve Hollasch's book "Ray Tracing in One Weekend". 
 After compiling main.cpp, ray-traced image files are produced in the .ppm file format. 
 
 Features (example images can be found in /output)
 - Ray-Sphere interaction 
+- Multithreaded rending across CPU cores
 - Scenes with multiple objects
 - Surface normalisation and shading
 - Pixel antialiasing
@@ -20,9 +22,10 @@ Features (example images can be found in /output)
 
 Requirements:
 - C++ compiler (gcc, clang, etc.)
-- CMake buid tool
+- CMake buid tool (v. 3.5)
 - PPM Image format viewer (Gimp, ImageMagick, etc.)
 
 Running and viewing image (E.g. Using GCC compiler and ImageMagick in bash)<br>
+`cmake --build build`<br>
 `./build/ray_tracing > output/image_render.ppm`<br>
 `display image_render.ppm`
