@@ -20,9 +20,9 @@ Features (example images can be found in /output)
 
 Requirements:
 - C++ compiler (gcc, clang, etc.)
+- CMake buid tool
 - PPM Image format viewer (Gimp, ImageMagick, etc.)
 
 Running and viewing image (E.g. Using GCC compiler and ImageMagick in bash)<br>
-`g++ main.cpp -o main`<br>
-`./main > image.ppm`<br>
-`display image.ppm`
+./build/ray_tracing > output/image_render.ppm<br>
+`display image_render.ppm`
