@@ -3,12 +3,6 @@
 main
 a.out
 
-
-# Rendered images
-*.ppm
-*.png
-
-
 # local files
 *.swp
 *.gch

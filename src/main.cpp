@@ -1,11 +1,11 @@
-#include "vec3.h"
-#include "sphere.h"
-#include "hittable_list.h"
-#include "camera.h"
-#include "diffuse.h"
-#include "metal.h"
-#include "dielectric.h"
-#include "utils.h"
+#include "../include/vec3.h"
+#include "../include/sphere.h"
+#include "../include/hittable_list.h"
+#include "../include/camera.h"
+#include "../include/diffuse.h"
+#include "../include/metal.h"
+#include "../include/dielectric.h"
+#include "../include/utils.h"
 
 
 int main() {
