@@ -1,7 +1,7 @@
 
 # Image Ray-Tracing Tool
 
-A CPU-based ray-tracing image tool developed in modern C++, without the use of any external graphics APIs or libraries. Images are created with multithreading for parallelism.<br>
+A CPU-based ray-tracing image tool developed in modern C++, without the use of any external graphics APIs or libraries. Images are created with CPU multithreading for parallelism.<br>
 
 Based on concepts introduced in Peter Shirley, Trevor David Black, and Steve Hollasch's book "Ray Tracing in One Weekend". 
 After compiling main.cpp, ray-traced image files are produced in the .ppm file format. 
@@ -9,11 +9,11 @@ After compiling main.cpp, ray-traced image files are produced in the .ppm file f
 
 Features (example images can be found in /output)
 - Ray-sphere interaction 
-- Multithreaded rending across CPU cores
+- Multithreaded rendering across CPU cores
 - Scenes with multiple objects
 - Surface normalisation and shading
 - Pixel antialiasing
-- Diffuse/lambertian, metal, and Dielectric (glass) materials and surface interactions
+- Diffuse/lambertian, metal, and dielectric (glass) materials types
 - Gamma correction
 - Configurable camera positioning and field of view
 - Defocus blur and depth of field adjustment
