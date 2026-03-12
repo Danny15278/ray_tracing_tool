@@ -24,5 +24,5 @@ Requirements:
 - PPM Image format viewer (Gimp, ImageMagick, etc.)
 
 Running and viewing image (E.g. Using GCC compiler and ImageMagick in bash)<br>
-./build/ray_tracing > output/image_render.ppm<br>
+`./build/ray_tracing > output/image_render.ppm`
 `display image_render.ppm`
