@@ -5,6 +5,9 @@
 #include "utils.h"
 #include "material.h"
 
+#include <vector>
+#include <thread>
+
 class Camera {
 
 private:
@@ -87,6 +90,8 @@ public:
 		double viewport_w{ viewport_h * asp_ratio }; 			// width of viewport
 		double pixel_w{ viewport_w / image_width }; 			// size of pixel in viewport space
 		double pixel_h{ viewport_h / image_height };
+		int image_pixel_size{ image_height * image_width * 3 };
+
 
 		w = (lookfrom - lookat).normalised(); 				
 		u = cross_product(vup, w).normalised();
@@ -102,44 +107,65 @@ public:
 		defocus_disk_u = u * defocus_radius;
 		defocus_disk_v = v * defocus_radius;
 
+		
+		std::vector<int> output_buffer(image_pixel_size); 		// preallocate exact size of output buffer (rgb values for each pixel)	
+		unsigned int thread_count{ std::thread::hardware_concurrency() };
+		unsigned int rows_per_thread{ (unsigned int) image_height / thread_count };
+		std::vector<std::thread> threads;
 
-		// Render ppm image
-
-		std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+		std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n"; 
 	
-		// iterate through each pixel
+		for (int t{ 0 }; t < thread_count; ++t) {
+			unsigned int row_start{ t * rows_per_thread };
+			unsigned int row_end{ (t == thread_count - 1) ? image_height : row_start + rows_per_thread };
 
-		for (int j{ 0 }; j < image_height; ++j) {
-			for (int i{ 0 }; i < image_width; ++i) {
+			threads.emplace_back([&, row_start, row_end]() {
+				for (unsigned int j{ row_start }; j < row_end; ++j) {
+					for (int i{ 0 }; i < image_width; ++i) {
+						
+						auto pixel_centre = viewport_upper_left + (double (i) / image_width) * viewport_u + (double (j) / image_height) * viewport_v;
+						Vec3 sum_pixel(0, 0, 0);
+						for (int s{ 0 }; s < no_samples; ++s) {
 
-				auto pixel_centre = viewport_upper_left + (double (i) / image_width) * viewport_u + (double (j) / image_height) * viewport_v;
-				Vec3 sum_pixel(0, 0, 0);
-				for (int s{ 0 }; s < no_samples; ++s) {
+						// Antialiasing calculation
 
-					// Antialiasing calculation
+							Vec3 offset{ sample_square().x * (viewport_u / image_width) + sample_square().y * (viewport_v / image_height) };		
+							Vec3 sample_point{ pixel_centre + offset };
+							auto ray_origin = (defocus_angle <= 0) ? lookfrom : random_disk_point();
+							Ray ray{ ray_origin, (sample_point - ray_origin) };
+							sum_pixel += ray_colour(ray, scene, depth);
 
-					Vec3 offset{ sample_square().x * (viewport_u / image_width) + sample_square().y * (viewport_v / image_height) };		
-					Vec3 sample_point{ pixel_centre + offset };
-					auto ray_origin = (defocus_angle <= 0) ? lookfrom : random_disk_point();
-					Ray ray{ ray_origin, (sample_point - ray_origin) };
-					sum_pixel += ray_colour(ray, scene, depth);
+						}
+
+						sum_pixel = sum_pixel / no_samples;
+						
+						// Gamma correction
+
+						auto r{ std::sqrt(sum_pixel.x) };
+						auto g{ std::sqrt(sum_pixel.y) };
+						auto b{ std::sqrt(sum_pixel.z) };
+						int rbyte{ int(255.99 * r) };
+						int gbyte{ int(255.99 * g) };
+						int bbyte{ int(255.99 * b) };
+
+						int iter = (j * image_width + i) * 3;
+						output_buffer[iter] = rbyte;
+						output_buffer[iter + 1] = gbyte;
+						output_buffer[iter + 2] = bbyte;
+					}
 				}
-
-				sum_pixel = sum_pixel / no_samples;
-				
-				// Gamma correction
-
-				auto r{ std::sqrt(sum_pixel.x) };
-				auto g{ std::sqrt(sum_pixel.y) };
-				auto b{ std::sqrt(sum_pixel.z) };
-
-				int rbyte{ int(255.99 * r) };
-				int gbyte{ int(255.99 * g) };
-				int bbyte{ int(255.99 * b) };
-
-				std::cout << rbyte << ' ' << gbyte << ' ' << bbyte << '\n';
-			}
+			});
 		}
+
+		for (auto& t : threads) {
+			t.join();
+		}
+
+		for (std::size_t i{ 0 }; i < image_pixel_size; i += 3) {
+			std::cout << output_buffer[i] << ' ' << output_buffer[i + 1] << ' ' << output_buffer[i + 2] << '\n';	
+		}
+
+
 	}
 };
 
